@@ -1,0 +1,65 @@
+{
+  "title": "Test Quiz \u2014 Abby vs You",
+  "questions": [
+    {
+      "id": "t1",
+      "text": "What\u2019s Abby\u2019s favorite color?",
+      "options": [
+        "Blue",
+        "Green",
+        "Purple",
+        "Yellow"
+      ],
+      "authorAnswer": 2,
+      "authorGuessForAbby": 0
+    },
+    {
+      "id": "t2",
+      "text": "Ideal Friday night:",
+      "options": [
+        "Movie at home",
+        "Dinner out",
+        "Game night",
+        "Live music"
+      ],
+      "authorAnswer": 3,
+      "authorGuessForAbby": 1
+    },
+    {
+      "id": "t3",
+      "text": "Go-to comfort food:",
+      "options": [
+        "Pizza",
+        "Ramen",
+        "Tacos",
+        "Mac and cheese"
+      ],
+      "authorAnswer": 1,
+      "authorGuessForAbby": 3
+    },
+    {
+      "id": "t4",
+      "text": "Favorite season:",
+      "options": [
+        "Spring",
+        "Summer",
+        "Autumn",
+        "Winter"
+      ],
+      "authorAnswer": 2,
+      "authorGuessForAbby": 1
+    },
+    {
+      "id": "t5",
+      "text": "Dream weekend trip:",
+      "options": [
+        "Beach town",
+        "Cozy mountain cabin",
+        "New city exploration",
+        "Amusement park"
+      ],
+      "authorAnswer": 2,
+      "authorGuessForAbby": 0
+    }
+  ]
+}

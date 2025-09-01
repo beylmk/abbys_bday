@@ -1,18 +1,18 @@
 {
-  "2025-08-31": "🧪 Test Sunday (Aug 31) — fake page for testing history & navigation",
-  "2025-08-24": "🧪 Test Sunday (Aug 24) — another fake page",
-  "2025-08-17": "🧪 Test Sunday (Aug 17) — another fake page",
   "2025-09-07": "Big kickoff 💌 Love letter about Abby (why you’re making this app for her)",
   "2025-09-14": "🎁 Physical present #1 (small lockbox code, first “big gift”)",
   "2025-09-21": "😂 Embarrassing story #1 (funny thing about you) + gift card",
-  "2025-09-28": "🗳️ Quiz/Poll (“Would you rathers”, guessing what we would both say)",
+  "2025-09-28": "🗳️ Quiz/Poll (“Would you rathers”, guessing what we would both say) — <a href='quiz.html?quiz=sample'>Play now</a>",
   "2025-10-05": "🎁 Physical present #2 (new code for box)",
   "2025-10-12": "🎶 Surprise playlist (one-time; short themed set of songs) + physical present",
   "2025-10-19": "🖼️ Shared memory (photo + caption) + crossword",
   "2025-10-26": "📝 Friend testimonial #1 (short message from someone special)",
   "2025-11-02": "🎁 Physical present #3",
-  "2025-11-09": "🗳️ Quiz/Poll (“Where will we be in the future?” guess what the other would do)",
+  "2025-11-09": "🗳️ Quiz/Poll (“Where will we be in the future?” guess what the other would do) — <a href='quiz.html?quiz=sample'>Play now</a>",
   "2025-11-16": "📝 Friend testimonial #2",
   "2025-11-23": "😂 Embarrassing story #2 + gift card",
-  "2025-11-30": "🎁 Physical present #4"
+  "2025-11-30": "🎁 Physical present #4",
+  "2025-08-31": "🧪 Test Sunday — try the test quiz here: <a href='quiz.html?quiz=test'>Play test quiz</a>",
+  "2025-08-24": "🧪 Test Sunday (Aug 24) — another fake page",
+  "2025-08-17": "🧪 Test Sunday (Aug 17) — another fake page"
 }

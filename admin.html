@@ -1,25 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin • Schedule Generator</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <main class="card">
-    <h1>Schedule Generator (Admin)</h1>
-    <p class="subtitle">Pick a start Sunday and number of weeks, then export a JSON skeleton you can paste into <code>schedule.json</code>.</p>
-    <label>Start Sunday: <input type="date" id="startDate" /></label>
-    <label>Number of weeks: <input type="number" id="weeks" value="52" min="1" max="60" /></label>
-    <button class="btn primary" id="generate">Generate</button>
-    <h2>Output</h2>
-    <textarea id="output" rows="12" style="width:100%"></textarea>
-    <div style="margin-top:10px">
-      <button class="btn" id="download">Download JSON</button>
-      <a class="btn" href="index.html">Home</a>
-    </div>
-  </main>
-  <script src="admin.js?v=1"></script>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Admin • Schedule Generator</title><link rel="stylesheet" href="styles.css?v=11" /></head>
+<body><main class="card"><h1>Schedule Generator (Admin)</h1>
+<p class="subtitle">Pick a start Sunday and number of weeks, then export a JSON skeleton for schedule.json.</p>
+<label>Start Sunday: <input type="date" id="startDate" /></label>
+<label>Number of weeks: <input type="number" id="weeks" value="52" min="1" max="60" /></label>
+<button class="btn primary" id="generate">Generate</button><h2>Output</h2>
+<textarea id="output" rows="12" style="width:100%"></textarea>
+<div style="margin-top:10px"><button class="btn" id="download">Download JSON</button><a class="btn" href="index.html">Home</a></div></main>
+<script src="admin.js?v=11"></script></body></html>
