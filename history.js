@@ -40,18 +40,28 @@
     return localStorage.getItem('read:' + iso) === '1';
   }
 
-  for (const iso of dates) {
-    const li = document.createElement('li');
 
-    const span = document.createElement('span');
-    span.innerHTML = prettyDate(iso) + (isRead(iso) ? ' ✅' : '');
+for (const iso of dates) {
+  const li = document.createElement('li');
+  li.className = 'row-li';
 
-    const a = document.createElement('a');
-    a.href = `view.html?date=${iso}&from=history`;
-    a.textContent = 'Open';
+  const link = document.createElement('a');
+  link.className = 'row';
+  link.href = `view.html?date=${iso}&from=history`;
+  link.setAttribute('aria-label', `Open surprise for ${prettyDate(iso)}`);
 
-    li.appendChild(span);
-    li.appendChild(a);
-    list.appendChild(li);
-  }
+  // Left label + right chevron
+  const left = document.createElement('span');
+  left.className = 'label';
+  left.innerHTML = prettyDate(iso) + (isRead(iso) ? ' ✅' : '');
+
+  const right = document.createElement('span');
+  right.className = 'chev';
+  right.textContent = '›';
+
+  link.appendChild(left);
+  link.appendChild(right);
+  li.appendChild(link);
+  list.appendChild(li);
+}
 })();
