@@ -1,5 +1,0 @@
-const SW_VERSION="v11";
-const APP_SHELL=["index.html","styles.css","main.js","history.html","history.js","view.html","view.js","manifest.json","schedule.json","admin.html","admin.js","quiz.html","quiz.js","quizzes/sample.json","quizzes/test.json"];
-self.addEventListener("install",e=>{e.waitUntil(caches.open(`app-${SW_VERSION}`).then(c=>c.addAll(APP_SHELL)));self.skipWaiting();});
-self.addEventListener("activate",e=>{e.waitUntil((async()=>{const ks=await caches.keys();await Promise.all(ks.filter(k=>!k.includes(`app-${SW_VERSION}`)).map(k=>caches.delete(k)));await self.clients.claim();})());});
-self.addEventListener("fetch",e=>{const u=new URL(e.request.url);const isShell=APP_SHELL.some(p=>u.pathname.endsWith(p));if(isShell){e.respondWith((async()=>{try{const fresh=await fetch(e.request,{cache:"no-store"});const c=await caches.open(`app-${SW_VERSION}`);c.put(e.request,fresh.clone());return fresh;}catch{return caches.match(e.request)}})());return;}e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request)));});
