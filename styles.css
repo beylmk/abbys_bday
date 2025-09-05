@@ -9,7 +9,8 @@
     --text: #1a1a1a;
     --muted: #555;
     --pill: rgba(255, 255, 255, .9);
-    --accent: #7c4dff
+    --accent: #7c4dff;
+  --topbar-h: calc(52px + env(safe-area-inset-top, 0));
 }
 
 * {
@@ -77,12 +78,15 @@ body {
 
 .card {
     width: min(900px, 92vw);
+  margin: 0 auto; 
     background: var(--pill);
     border-radius: 16px;
     box-shadow: var(--shadow);
     padding: 20px;
-    text-align: left
+    text-align: left;
 }
+
+.card-with-topbar { margin-top: 0; }
 
 .card h1 {
     text-align: center
@@ -133,8 +137,9 @@ body {
   align-items: center;
   gap: 12px;
   padding: calc(8px + env(safe-area-inset-top, 0)) 12px 8px 12px;
-  background: none;   /* transparent over gradient */
+  background: none;
   box-shadow: none;
+  height: var(--topbar-h);/* matches var within --topbar-h above */
 }
 
 /* Center the title no matter what’s on the left/right */
@@ -162,9 +167,11 @@ body {
   width: 36px; height: 36px; /* matches .icon-button */
 }
 
-/* Add safe space under the fixed header (for pages without a .card layout) */
+/* For pages with the fixed header */
 .page-with-topbar {
-  padding-top: 60px; /* adjust if your topbar height changes */
+  align-items: stretch;
+  justify-content: flex-start;
+  padding-top: var(--topbar-h);
 }
 
 .topbar h1 {
@@ -176,7 +183,7 @@ body {
 
 /* Give the card some space under the sticky header */
 .card-with-topbar {
-  margin-top: 60px;
+  margin-top: 0;
 }
 
 /* Full-row clickable list items */

@@ -5,7 +5,8 @@ function parseLocalISO(iso) {
   const [y, m, d] = iso.split('-').map(Number);
   return new Date(y, m - 1, d); // local midnight
 }
-const LAUNCH_ISO = '2025-09-07';
+// todo update this 
+const LAUNCH_ISO = '2025-08-31';
 
   function todayLocal(){ const n=new Date(); return new Date(n.getFullYear(), n.getMonth(), n.getDate()); }
   function isSunday(d){ return d.getDay()===0; }
