@@ -84,11 +84,11 @@ body {
 
 .card {
     width: min(900px, 92vw);
-  margin: 0 auto; 
+    margin: 20px auto; 
     background: var(--pill);
     border-radius: 16px;
     box-shadow: var(--shadow);
-    padding: 20px;
+    padding: 10px;
     text-align: left;
 }
 
@@ -138,13 +138,13 @@ body {
 .topbar {
   position: fixed;
   top: 0; left: 0; right: 0;
-  z-index: 10;
+  z-index: 100;
   display: flex;
   align-items: center;
   gap: 12px;
   padding: calc(8px + env(safe-area-inset-top, 0)) 12px 8px 12px;
-  background: none;
-  box-shadow: none;
+  background: #7c4dff;
+  box-shadow:inset;
   height: var(--topbar-h);/* matches var within --topbar-h above */
 }
 
@@ -154,7 +154,7 @@ body {
   font-size: 35px;
   font-weight: 700;
   text-align: center;
-    font-family: "Chewy", system-ui;
+  font-family: "Chewy", system-ui;
   font-weight: 400;
 }
 
@@ -180,6 +180,7 @@ body {
   align-items: stretch;
   justify-content: flex-start;
   padding-top: var(--topbar-h);
+  padding-bottom: var(--topbar-h);
 }
 
 .topbar h1 {
@@ -187,9 +188,6 @@ body {
   font-weight: 700;
   margin: 0 auto;
   text-align: center;
-    font-family: "Chewy", system-ui;
-  font-weight: 400;
-  font-style: normal;
 }
 
 /* Give the card some space under the sticky header */
