@@ -1,41 +1,55 @@
 {
-  "title": "Would You Rather \u2014 Us Two",
+  "title": "How well do you we know each other?",
   "questions": [
     {
       "id": "q1",
-      "text": "Lazy Sunday plan?",
+      "text": "Favorite color from the following?",
       "options": [
-        "Brunch out",
-        "PJs + movies",
-        "Long walk",
-        "Board games"
+        "Green",
+        "Purple",
+        "Orange",
+        "Blue"
       ],
       "authorAnswer": 2,
-      "authorGuessForAbby": 1
+      "authorGuessForAbby": 0
     },
     {
       "id": "q2",
-      "text": "Dessert we split?",
+      "text": "You can only have one dessert for the rest of your life...what are you choosing??",
       "options": [
         "Cheesecake",
         "Brownie sundae",
         "Tiramisu",
-        "Fruit tart"
+        "Strawberry strudel"
       ],
       "authorAnswer": 1,
       "authorGuessForAbby": 0
     },
     {
       "id": "q3",
-      "text": "Best vacation vibe:",
+      "text": "Least favorite chore from the following?",
       "options": [
-        "Beach nap",
-        "City food tour",
-        "Cabin in the woods",
-        "Theme parks"
+        "Taking trash out",
+        "Vacuuming",
+        "Washing dishes",
+        "Putting dishes away"
       ],
-      "authorAnswer": 1,
-      "authorGuessForAbby": 0
+      "authorAnswer": 0,
+      "authorGuessForAbby": 3
+    },
+        {
+      "id": "q4",
+      "text": "What's Abby's best quality?",
+      "options": [
+        "Open-mindedness",
+        "Loyalty",
+        "Humor",
+        "Generosity",
+        "Propensity to shop",
+        "All of the above"
+      ],
+      "authorAnswer": 4,
+      "authorGuessForAbby": 4
     }
   ]
 }
