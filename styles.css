@@ -82,9 +82,7 @@ body {
 .badge {
   display: inline-block;
   padding: 6px 12px;
-  border-radius: 999px;
-  background: var(--accent2, #ff9a9e);
-  color: #fff;
+  color: #1a1a1a;
   font-weight: 700;
 }
 
