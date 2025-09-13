@@ -1,4 +1,4 @@
-const SW_VERSION = "v13";
+const SW_VERSION = "v12";
 const APP_SHELL = ["config.js", "index.html",  "extras.json", "styles.css", "main.js", "history.html", "history.js", "view.html", "view.js", "manifest.json", "schedule.json", "admin.html", "admin.js", "quiz.html", "quiz.js", "quizzes/sample.json", "quizzes/test.json"];
 self.addEventListener("install", e => { e.waitUntil(caches.open(`app-${SW_VERSION}`).then(c => c.addAll(APP_SHELL))); self.skipWaiting(); });
 self.addEventListener("activate", e => { e.waitUntil((async () => { const ks = await caches.keys(); await Promise.all(ks.filter(k => !k.includes(`app-${SW_VERSION}`)).map(k => caches.delete(k))); await self.clients.claim(); })()); });
