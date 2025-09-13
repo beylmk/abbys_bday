@@ -1,9 +1,11 @@
 (async function () {
+  const EMAIL_TO = "beylmk@gmail.com.com";
+
   const params = new URLSearchParams(location.search); const id = params.get('quiz') || 'sample';
   const data = await fetch(`quizzes/${id}.json`, { cache: 'no-store' }).then(r => r.json());
   const mount = document.getElementById('quizMount'); const nav = document.getElementById('navActions'); const prevBtn = document.getElementById('prevBtn'); const nextBtn = document.getElementById('nextBtn'); document.getElementById('qTitle').textContent = data.title || "Sunday Quiz";
   const STORAGE_KEY = `quiz:${id}`; let saved = null; try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch { }
-function renderAnswersView(obj) {
+  function renderAnswersView(obj) {
   mount.innerHTML = '<h2>All Answers</h2>';
 
   const list = document.createElement('ol');
@@ -71,6 +73,10 @@ function renderAnswersView(obj) {
     <div class="winner" style="text-align:center;margin-top:12px;">
       <span class="badge">${winnerText}</span>
     </div>
+
+    <div class="actions" style="margin-top:12px;">
+      <button id="sendResultsBtn" class="btn primary">Send results to Maddie</button>
+    </div>
   `;
   mount.appendChild(summary);
 
@@ -80,12 +86,51 @@ function renderAnswersView(obj) {
     summary.querySelector('#barAbby').style.width = pctAbby + '%';
   });
 
+  // Compose a plain-text email body of the results
+  function buildEmailBody() {
+    const lines = [];
+    lines.push((data.title || 'Sunday Quiz') + ' — Results');
+    lines.push('');
+    lines.push(`You about Abby: ${youRightAboutAbby}/${total} (${pctYou}%)`);
+    lines.push(`Abby about you: ${abbyRightAboutYou}/${total} (${pctAbby}%)`);
+    lines.push(`Winner: ${winnerText.replace(/<[^>]+>/g,'')}`);
+    lines.push('');
+    lines.push('--- Details ---');
+    for (let i = 0; i < qs.length; i++) {
+      const q = qs[i];
+      const myAns     = q.authorAnswer;
+      const myGuess   = q.authorGuessForAbby;
+      const abbyAns   = obj.answers[i];
+      const abbyGuess = obj.guesses[i];
+      const youRight  = (myGuess === abbyAns) ? '✅' : '❌';
+      const abbyRight = (abbyGuess === myAns) ? '✅' : '❌';
+      lines.push(`${i+1}. ${q.text}`);
+      lines.push(`   Abby answered: ${q.options[abbyAns] ?? '—'}   (You guessed: ${q.options[myGuess] ?? '—'} ${youRight})`);
+      lines.push(`   You answered:  ${q.options[myAns] ?? '—'}   (Abby guessed: ${q.options[abbyGuess] ?? '—'} ${abbyRight})`);
+      lines.push('');
+    }
+    return lines.join('\n');
+  }
+
+    // Wire the send button
+  document.getElementById('sendResultsBtn')?.addEventListener('click', async () => {
+    const text = buildEmailBody();
+    if (navigator.share) {
+      try { await navigator.share({ title: data.title || 'Sunday Quiz', text }); return; } catch {}
+    }
+    const subject = encodeURIComponent((data.title || 'Sunday Quiz') + ' — Results');
+    const body = encodeURIComponent(text);
+    window.location.href = `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${subject}&body=${body}`;
+  });
+
+
   // Back row
   const backRow = document.createElement('div');
   backRow.className = 'actions';
   backRow.innerHTML = `<a class="btn" href="${returnUrl}">Back</a>`;
   mount.appendChild(backRow);
-}
+  
+  }
 
   if (saved && Array.isArray(saved.answers) && Array.isArray(saved.guesses)) { mount.innerHTML = ''; const btn = document.createElement('button'); btn.className = 'btn primary'; btn.textContent = 'View all answers'; btn.addEventListener('click', () => renderAnswersView(saved)); mount.appendChild(btn); nav.style.display = 'none'; return; }
   let step = 0; const answers = []; const guesses = [];
