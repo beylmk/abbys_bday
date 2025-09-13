@@ -293,6 +293,13 @@ video {
   margin: 12px auto;
 }
 
+.app-scroll {
+  position: fixed;
+  top: var(--topbar-h); left: 0; right: 0; bottom: 0;
+  overflow: auto;              /* <-- scrolls here */
+  -webkit-overflow-scrolling: touch;
+  padding: 16px;
+}
 
 @keyframes bg {
   0% {

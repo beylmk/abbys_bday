@@ -1,4 +1,5 @@
 (async function(){
+  // tdo set this to sept 7
   const LAUNCH_ISO = '2025-08-31';
 
   async function loadMap(){

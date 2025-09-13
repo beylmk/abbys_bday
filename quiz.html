@@ -1,16 +1,24 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Quiz • Sunday Unscary</title>
-    <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Quiz • Sunday Unscary</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
+<body class="page-with-topbar">
+  <!-- Fixed transparent top bar -->
+  <header class="topbar">
+    <a class="icon-button" id="backBtn" href="#">←</a>
+    <h1 class="title">Quiz</h1>
+    <span class="spacer" aria-hidden="true"></span>
+  </header>
 
-<body>
-    <main class="card">
-        <h1 id="qTitle">Sunday Quiz</h1>
+  <!-- Everything below here scrolls -->
+  <main class="app-scroll">
+    <div class="card">
+              <h1 id="qTitle">Sunday Quiz</h1>
+
         <div id="quizMount">
             <p>Loading quiz…</p>
         </div>

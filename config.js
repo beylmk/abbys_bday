@@ -1,4 +1,5 @@
 // Toggle to include test extras (HTML pages prefixed with 'extra-')
+// TODO toggle this off
 const INCLUDE_EXTRAS = true;
 
 // Helper: parse YYYY-MM-DD as local
