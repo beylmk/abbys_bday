@@ -32,6 +32,7 @@
     nonSunday.hidden = false;
     const canShowHistory = today >= parseLocalISO(LAUNCH_ISO);
     const btn = document.getElementById('seeHistory');
+    document.getElementById('seeHistory').addEventListener('click',()=>location.href='history.html',{passive:true});
     btn.style.display = canShowHistory ? 'inline-block' : 'none';
     function tick(){
       const ms = nextSunday().getTime() - Date.now();
