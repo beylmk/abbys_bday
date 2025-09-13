@@ -44,9 +44,9 @@ body {
     padding: 24px
 }
 
-.hidden {
+/* .hidden {
     display: none
-}
+} */
 
 .headline {
     font-size: clamp(32px, 8vw, 80px);

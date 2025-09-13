@@ -34,10 +34,12 @@
     <button class="btn primary" id="viewSurprise">View unscary</button>
   </section>
 
-  <script src="main.js"></script>
-  <script>
+  <!-- <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.v13.js').catch(console.error);
     }
-  </script>
+  </script> -->
+<!-- at the end of <body>, in this order -->
+<script src="config.js" defer></script>
+<script src="main.js" defer></script>
 </body>

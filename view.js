@@ -1,42 +1,41 @@
-(async function () {
-  function parseLocalISO(iso) {
-    const [y, m, d] = iso.split('-').map(Number);
-    return new Date(y, m - 1, d);
+(async function(){
+  function pretty(iso){
+    const d=parseLocalISO(iso);
+    return d.toLocaleDateString(undefined,{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   }
-  function prettyDate(iso) {
-    const d = parseLocalISO(iso);
-    return d.toLocaleDateString(undefined, {
-      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
+  async function loadMap(){
+    const sch = await fetch('schedule.json',{cache:'no-store'}).then(r=>r.json());
+    if(INCLUDE_EXTRAS){
+      const ex = await fetch('extras.json',{cache:'no-store'}).then(r=>r.ok?r.json():{});
+      return Object.assign({}, ex, sch);
+    }
+    return sch;
   }
 
-  const params = new URLSearchParams(location.search);
-  const iso = params.get('date');
-  const from = params.get('from');
+  const params=new URLSearchParams(location.search);
+  const iso=params.get('date'); const from=params.get('from');
 
-  const title = document.getElementById('title');
-  const content = document.getElementById('content');
-  const backBtn = document.getElementById('backBtn');
-  if (backBtn) backBtn.href = (from === 'history') ? 'history.html' : 'index.html';
+  const title=document.getElementById('title');
+  const content=document.getElementById('content');
+  const backBtn=document.getElementById('backBtn');
+  backBtn.href = (from==='history')?'history.html':'index.html';
 
-  const [schedule, extras] = await Promise.all([
-    fetch('schedule.json', { cache: 'no-store' }).then(r => r.json()),
-    fetch('extras.json',   { cache: 'no-store' }).then(r => r.ok ? r.json() : {})
-  ]);
-
-  const all = Object.assign({}, extras, schedule);
-
-  if (!iso || !all[iso]) {
-    title.textContent = 'Not found';
-    content.textContent = 'No surprise scheduled for this date.';
+  const map = await loadMap();
+  if(!iso || !map[iso]){
+    title.textContent='Not found';
+    content.textContent='No page found for this date.';
     return;
   }
 
-  title.textContent = prettyDate(iso);
-  content.innerHTML = all[iso];
+  title.textContent = pretty(iso);
 
-  const key = 'read:' + iso;
-  if (!localStorage.getItem(key)) {
-    localStorage.setItem(key, '1');
+  // fetch the HTML file for this date and inject it
+  try{
+    const html = await fetch(map[iso], {cache:'no-store'}).then(r=>r.text());
+    content.innerHTML = html;
+  }catch(e){
+    content.textContent = 'Error loading page.';
   }
+
+  if(!localStorage.getItem('read:'+iso)) localStorage.setItem('read:'+iso,'1');
 })();
