@@ -32,9 +32,10 @@
         "Taking trash out",
         "Vacuuming",
         "Washing dishes",
-        "Putting dishes away"
+        "Putting dishes away",
+        "Folding clothes"
       ],
-      "authorAnswer": 0,
+      "authorAnswer": 4,
       "authorGuessForAbby": 3
     },
         {
@@ -67,12 +68,12 @@
       "id": "q6",
       "text": "Ideal retirement job?",
       "options": [
-        "Work at an animal sanctuary",
-        "Be an old-lady blogger",
-        "No job at all...",
-        "Grandma"
+        "What job?",
+        "Blogger",
+        "Fostering animals",
+        "Selling my own art"
       ],
-      "authorAnswer": 0,
+      "authorAnswer": 2,
       "authorGuessForAbby": 3
     },
     {
@@ -85,7 +86,7 @@
         "Create art"
       ],
       "authorAnswer": 2,
-      "authorGuessForAbby": 3
+      "authorGuessForAbby": 0
     },
         {
       "id": "q8",
