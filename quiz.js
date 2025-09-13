@@ -76,6 +76,7 @@
 
     <div class="actions" style="margin-top:12px;">
       <button id="sendResultsBtn" class="btn primary">Send results to Maddie</button>
+       <a class="btn" href="index.html">Home</a> 
     </div>
   `;
   mount.appendChild(summary);

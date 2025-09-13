@@ -1,5 +1,5 @@
 {
-  "title": "How well do you we know each other?",
+  "title": "How well do we know each other?",
   "questions": [
     {
       "id": "q1",
@@ -39,6 +39,66 @@
     },
         {
       "id": "q4",
+      "text": "If you had to move, and money wasn't a problem, which of these cities would you choose??",
+      "options": [
+        "NYC",
+        "Chicago",
+        "Los Angeles",
+        "Austin",
+        "Portland"
+      ],
+      "authorAnswer": 1,
+      "authorGuessForAbby": 0
+    },
+        {
+      "id": "q5",
+      "text": "Ideal number of kids?",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "authorAnswer": 3,
+      "authorGuessForAbby": 3
+    },
+    {
+      "id": "q6",
+      "text": "Ideal retirement job?",
+      "options": [
+        "Work at an animal sanctuary",
+        "Be an old-lady blogger",
+        "No job at all...",
+        "Grandma"
+      ],
+      "authorAnswer": 0,
+      "authorGuessForAbby": 3
+    },
+    {
+      "id": "q7",
+      "text": "Which of these would you rather do at a professional level?",
+      "options": [
+        "Sing",
+        "Motivationally speak",
+        "Write",
+        "Create art"
+      ],
+      "authorAnswer": 2,
+      "authorGuessForAbby": 3
+    },
+        {
+      "id": "q8",
+      "text": "Would you rather...?",
+      "options": [
+        "Have a self-cleaning house",
+        "Have a live-in chef"
+      ],
+      "authorAnswer": 1,
+      "authorGuessForAbby": 0
+    },
+    {
+      "id": "q10",
       "text": "What's Abby's best quality?",
       "options": [
         "Open-mindedness",
