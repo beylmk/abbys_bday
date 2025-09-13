@@ -29,9 +29,10 @@ function renderAnswersView(obj) {
     li.innerHTML = `
       <p><strong>${q.text}</strong></p>
       <p>You answered: <em>${q.options[abbyAns] ?? "—"}</em></p>
-      <p>You guessed I answered: <em>${q.options[abbyGuess] ?? "—"}</em> ${abbyGotRight ? "✅" : "❌"}</p>
-      <p>What I actually answered: <strong>${q.options[myAns]}</strong></p>
-      <p><small>I guessed you would pick: <em>${q.options[myGuess]}</em> ${youGotRight ? "✅" : "❌"}</small></p>
+      <p><small>Maddie guessed you would pick: <em>${q.options[myGuess]}</em> ${youGotRight ? "✅" : "❌"}</small></p>
+      <p>Maddie's answer: <strong>${q.options[myAns]}</strong></p>
+      <p><small>You guessed Maddie answered: <em>${q.options[abbyGuess] ?? "—"}</em> ${abbyGotRight ? "✅" : "❌"}</small></p>
+      
       <hr/>
     `;
     list.appendChild(li);
@@ -54,16 +55,16 @@ function renderAnswersView(obj) {
     <h3 style="margin:0 0 8px 0;">Summary</h3>
 
     <div class="row">
-      <div><strong>Maddie about Abby:</strong> ${youRightAboutAbby}/${total} (${pctYou}%)</div>
+      <div><strong>Maddie got right about Abby:</strong> ${youRightAboutAbby}/${total} (${pctYou}%)</div>
     </div>
-    <div class="progress" aria-label="Maddie about Abby">
+    <div class="progress" aria-label="Maddie got right about Abby">
       <span id="barYou" style="width:0%"></span>
     </div>
 
     <div class="row" style="margin-top:10px">
-      <div><strong>Abby about Maddie:</strong> ${abbyRightAboutYou}/${total} (${pctAbby}%)</div>
+      <div><strong>Abby got right about Maddie:</strong> ${abbyRightAboutYou}/${total} (${pctAbby}%)</div>
     </div>
-    <div class="progress" aria-label="Abby about Maddie">
+    <div class="progress" aria-label="Abby got right about Maddie">
       <span id="barAbby" style="width:0%"></span>
     </div>
 

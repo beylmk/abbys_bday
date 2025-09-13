@@ -10,6 +10,7 @@
   --muted: #555;
   --pill: rgba(255, 255, 255, .9);
   --accent: #7c4dff;
+  --accent2: #c09145;
   --topbar-h: calc(52px + env(safe-area-inset-top, 0));
 }
 
@@ -82,7 +83,7 @@ body {
   display: inline-block;
   padding: 6px 12px;
   border-radius: 999px;
-  background: var(--accent, #7c4dff);
+  background: var(--accent2, #ff9a9e);
   color: #fff;
   font-weight: 700;
 }
