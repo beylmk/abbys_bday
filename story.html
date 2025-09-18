@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Story • Sunday Unscary</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="page-with-topbar">
+  <header class="topbar">
+    <a class="icon-button" id="topBackBtn" href="#">←</a>
+    <h1 class="title" id="storyTitle">Story</h1>
+    <span class="spacer" aria-hidden="true"></span>
+  </header>
+  <main class="app-scroll">
+    <div class="card">
+      <div id="storyMount">Loading…</div>
+      <div class="actions" id="storyNav" style="margin-top:12px">
+        <button class="btn" id="prevPage">Back</button>
+        <button class="btn primary" id="nextPage">Next</button>
+      </div>
+    </div>
+  </main>
+  <script src="config.js" defer></script>
+  <script src="story.js" defer></script>
+</body>
+</html>

@@ -1,6 +1,6 @@
 (async function(){
   // todo set this to sept 7
-  const LAUNCH_ISO = '2025-09-07';
+  const LAUNCH_ISO = '2025-08-31';
 
   async function loadMap(){
     const sch = await fetch('schedule.json',{cache:'no-store'}).then(r=>r.json());
