@@ -1,6 +1,6 @@
 // Toggle to include test extras (HTML pages prefixed with 'extra-')
 // TODO toggle this off
-const INCLUDE_EXTRAS = true;
+const INCLUDE_EXTRAS = false;
 
 // Helper: parse YYYY-MM-DD as local
 function parseLocalISO(iso){
