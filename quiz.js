@@ -1,150 +1,290 @@
 (async function () {
-  const EMAIL_TO = "beylmk@gmail.com.com";
+  // ---------- Setup & data ----------
+  const params = new URLSearchParams(location.search);
+  const id = params.get('quiz') || 'sample';
 
-  const params = new URLSearchParams(location.search); const id = params.get('quiz') || 'sample';
+  // Where to go when backing out on the first question
+  const returnUrl =
+    params.get('return') ||
+    sessionStorage.getItem('quiz:returnUrl') ||
+    (document.referrer || '') ||
+    'index.html';
+  sessionStorage.setItem('quiz:returnUrl', returnUrl);
+
   const data = await fetch(`quizzes/${id}.json`, { cache: 'no-store' }).then(r => r.json());
-  const mount = document.getElementById('quizMount'); const nav = document.getElementById('navActions'); const prevBtn = document.getElementById('prevBtn'); const nextBtn = document.getElementById('nextBtn'); document.getElementById('qTitle').textContent = data.title || "Sunday Quiz";
-  const STORAGE_KEY = `quiz:${id}`; let saved = null; try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch { }
-  function renderAnswersView(obj) {
-  mount.innerHTML = '<h2>All Answers</h2>';
 
-  const list = document.createElement('ol');
-  const qs = data.questions;
+  const mount = document.getElementById('quizMount');
+  const nav = document.getElementById('navActions');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const titleEl = document.getElementById('qTitle');
 
-  let youRightAboutAbby = 0;   // your guess of Abby's answer equals Abby's actual answer
-  let abbyRightAboutYou = 0;   // Abby's guess of your answer equals your actual answer
+  if (titleEl) titleEl.textContent = data.title || "Sunday Quiz";
 
-  for (let i = 0; i < qs.length; i++) {
-    const q = qs[i];
-    const myAns     = q.authorAnswer;           // your actual answer (index)
-    const myGuess   = q.authorGuessForAbby;     // what you guessed Abby would pick (index)
-    const abbyAns   = obj.answers[i];           // Abby's actual answer (index)
-    const abbyGuess = obj.guesses[i];           // Abby's guess of your answer (index)
+  const STORAGE_KEY = `quiz:${id}`;
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null'); } catch { }
 
-    const youGotRight   = (myGuess === abbyAns);
-    const abbyGotRight  = (abbyGuess === myAns);
-
-    if (youGotRight)  youRightAboutAbby++;
-    if (abbyGotRight) abbyRightAboutYou++;
-
-    const li = document.createElement('li');
-    li.innerHTML = `
-      <p><strong>${q.text}</strong></p>
-      <p>You answered: <em>${q.options[abbyAns] ?? "—"}</em></p>
-      <p><small>Maddie guessed you would pick: <em>${q.options[myGuess]}</em> ${youGotRight ? "✅" : "❌"}</small></p>
-      <p>Maddie's answer: <strong>${q.options[myAns]}</strong></p>
-      <p><small>You guessed Maddie answered: <em>${q.options[abbyGuess] ?? "—"}</em> ${abbyGotRight ? "✅" : "❌"}</small></p>
-      
-      <hr/>
-    `;
-    list.appendChild(li);
+  // persistent state
+  if (!saved || typeof saved !== 'object') {
+    saved = { index: 0, answers: [], guesses: [], revealed: [] };
   }
+  if (!Array.isArray(saved.answers)) saved.answers = [];
+  if (!Array.isArray(saved.guesses)) saved.guesses = [];
+  if (!Array.isArray(saved.revealed)) saved.revealed = [];
 
-  mount.appendChild(list);
+  const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
 
-  // ----- Summary block -----
-  const total = qs.length;
-  const pctYou  = Math.round((youRightAboutAbby / total) * 100);
-  const pctAbby = Math.round((abbyRightAboutYou / total) * 100);
+  // start index from ?q= or saved
+  const urlQ = Number(params.get('q'));
+  let qIndex = Number.isFinite(urlQ)
+    ? clamp(urlQ, 0, data.questions.length - 1)
+    : clamp(Number(saved.index || 0), 0, data.questions.length - 1);
 
-  let winnerText = "It's a tie! 💖";
-  if (youRightAboutAbby > abbyRightAboutYou) winnerText = "Maddie wins! 🎉";
-  else if (abbyRightAboutYou > youRightAboutAbby) winnerText = "Abby wins! 🎉";
+  // ---------- History sync (so hardware back mirrors UI) ----------
+  function syncHistory() {
+    const url = new URL(location.href);
+    url.searchParams.set('q', String(qIndex));
+    history.replaceState({ q: qIndex }, '', url);
+  }
+  syncHistory();
 
-  const summary = document.createElement('section');
-  summary.className = 'summary';
-  summary.innerHTML = `
-    <h3 style="margin:0 0 8px 0;">Summary</h3>
-
-    <div class="row">
-      <div><strong>Maddie got right about Abby:</strong> ${youRightAboutAbby}/${total} (${pctYou}%)</div>
-    </div>
-    <div class="progress" aria-label="Maddie got right about Abby">
-      <span id="barYou" style="width:0%"></span>
-    </div>
-
-    <div class="row" style="margin-top:10px">
-      <div><strong>Abby got right about Maddie:</strong> ${abbyRightAboutYou}/${total} (${pctAbby}%)</div>
-    </div>
-    <div class="progress" aria-label="Abby got right about Maddie">
-      <span id="barAbby" style="width:0%"></span>
-    </div>
-
-    <div class="winner" style="text-align:center;margin-top:12px;">
-      <span class="badge">${winnerText}</span>
-    </div>
-
-    <div class="actions" style="margin-top:12px;">
-      <button id="sendResultsBtn" class="btn primary">Send results to Maddie</button>
-       <a class="btn" href="index.html">Home</a> 
-    </div>
-  `;
-  mount.appendChild(summary);
-
-  // Animate / set bar widths
-  requestAnimationFrame(() => {
-    summary.querySelector('#barYou').style.width  = pctYou + '%';
-    summary.querySelector('#barAbby').style.width = pctAbby + '%';
+  window.addEventListener('popstate', (e) => {
+    const q = e.state?.q;
+    if (typeof q === 'number') {
+      if (q < 0 || (q === 0 && qIndex === 0)) { exitQuiz(); return; }
+      qIndex = clamp(q, 0, data.questions.length - 1);
+      renderQuestion(qIndex);
+    } else {
+      if (qIndex === 0) exitQuiz();
+    }
   });
 
-  // Compose a plain-text email body of the results
-  function buildEmailBody() {
-    const lines = [];
-    lines.push((data.title || 'Sunday Quiz') + ' — Results');
-    lines.push('');
-    lines.push(`You about Abby: ${youRightAboutAbby}/${total} (${pctYou}%)`);
-    lines.push(`Abby about you: ${abbyRightAboutYou}/${total} (${pctAbby}%)`);
-    lines.push(`Winner: ${winnerText.replace(/<[^>]+>/g,'')}`);
-    lines.push('');
-    lines.push('--- Details ---');
+  function exitQuiz() {
+    if (returnUrl && !/quiz\.html/i.test(returnUrl)) {
+      location.href = returnUrl;
+    } else if (history.length > 1) {
+      history.back();
+    } else {
+      location.href = 'index.html';
+    }
+  }
+
+  function saveState() {
+    try { saved.index = qIndex; localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch { }
+  }
+
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, s => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[s]
+    ));
+  }
+
+  // ---------- Renderers ----------
+  function renderQuestion(idx) {
+    const q = data.questions[idx];
+    if (!q) { renderDone(); return; }
+
+    const isFreeform = (q.type === 'freeform') || (!Array.isArray(q.options));
+    const yourAns = saved.answers[idx];    // number for MCQ, string for freeform
+    const yourGuess = saved.guesses[idx];
+    const isRevealed = !!saved.revealed[idx];
+
+    const progressHTML = `<p class="muted" style="margin-top:8px">Question ${idx + 1} of ${data.questions.length}</p>`;
+
+    if (isFreeform) {
+      // ----- FREEFORM -----
+      if (!isRevealed) {
+        // Entry form
+        mount.innerHTML = `
+          <h2 style="margin-top:0">${q.text}</h2>
+          <textarea id="ffInput" rows="6" style="width:100%;padding:10px;border-radius:12px;border:1px solid rgba(0,0,0,.12)"
+            placeholder="Write your thoughts here...">${typeof yourAns === 'string' ? yourAns : ''}</textarea>
+          <div class="actions" style="margin-top:12px">
+            <button id="ffSubmit" class="btn primary">Submit</button>
+          </div>
+          ${progressHTML}
+        `;
+        if (nextBtn) nextBtn.disabled = true; // next only after submit
+
+        document.getElementById('ffSubmit')?.addEventListener('click', () => {
+          const val = String(document.getElementById('ffInput').value || '').trim();
+          saved.answers[idx] = val;
+          saved.revealed[idx] = true;  // reveal after submit
+          saveState();
+          renderQuestion(idx);
+        });
+      } else {
+        // Reveal view (your text + author's text)
+        const yourText = (typeof yourAns === 'string' && yourAns.trim()) ? yourAns.trim() : '<em>(no answer)</em>';
+        const authorText = (q.authorText || q.authorAnswerText || q.authorAnswer || '').toString() || '<em>(no reply yet)</em>';
+        const isLast = (idx === data.questions.length - 1);
+
+        mount.innerHTML = `
+    <h2 style="margin-top:0">${q.text}</h2>
+    <div class="card" style="background:#fff7; padding:12px; border-radius:12px;">
+      <p><strong>Your note:</strong></p>
+      <p>${escapeHtml(yourText).replace(/\\n/g, '<br>')}</p>
+    </div>
+    <div class="card" style="background:#fff7; padding:12px; border-radius:12px; margin-top:10px;">
+      <p><strong>My note:</strong></p>
+      <p>${escapeHtml(authorText).replace(/\\n/g, '<br>')}</p>
+    </div>
+
+    <div class="actions" style="margin-top:12px">
+      <button id="ffNext" class="btn primary">${isLast ? 'Finish' : 'Next question'}</button>
+    </div>
+
+    ${progressHTML}
+  `;
+
+        // Local "Next" button always present on reveal view
+        document.getElementById('ffNext')?.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (!isLast) {
+            qIndex = idx + 1;
+            renderQuestion(qIndex);
+          } else {
+            renderDone();
+          }
+        });
+
+        // Also sync the global next button if you have one
+        if (nextBtn) {
+          nextBtn.disabled = false;
+          nextBtn.textContent = isLast ? 'Finish' : 'Next';
+        }
+      }
+
+    } else {
+      // ----- MULTIPLE CHOICE (existing behavior) -----
+      const options = q.options || [];
+      const optionButtons = (name, selectedIdx) => `
+        <div class="actions" data-group="${name}">
+          ${options.map((opt, i) => `
+            <button type="button" class="btn option ${selectedIdx === i ? 'selected' : ''}" data-idx="${i}">
+              ${opt}
+            </button>`).join('')}
+        </div>
+      `;
+
+      mount.innerHTML = `
+        <h2 style="margin-top:0">${q.text}</h2>
+        <h3>Your answer</h3>
+        ${optionButtons('answer', yourAns)}
+        <h3>Your guess of my answer</h3>
+        ${optionButtons('guess', yourGuess)}
+        ${progressHTML}
+      `;
+
+      const answerGroup = mount.querySelector('[data-group="answer"]');
+      const guessGroup = mount.querySelector('[data-group="guess"]');
+
+      answerGroup?.addEventListener('click', (e) => {
+        const b = e.target.closest('button[data-idx]');
+        if (!b) return;
+        const i = Number(b.getAttribute('data-idx'));
+        saved.answers[idx] = i;
+        saveState();
+        answerGroup.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+        b.classList.add('selected');
+      });
+
+      guessGroup?.addEventListener('click', (e) => {
+        const b = e.target.closest('button[data-idx]');
+        if (!b) return;
+        const i = Number(b.getAttribute('data-idx'));
+        saved.guesses[idx] = i;
+        saveState();
+        guessGroup.querySelectorAll('button').forEach(btn => btn.classList.remove('selected'));
+        b.classList.add('selected');
+      });
+
+      if (nextBtn) nextBtn.textContent = (idx === data.questions.length - 1) ? 'Finish' : 'Next';
+    }
+
+    if (prevBtn) prevBtn.textContent = (idx > 0) ? 'Back' : 'Exit';
+
+    syncHistory();
+    saveState();
+  }
+
+  function renderDone() {
+    mount.innerHTML = `
+      <h2>Nice! You finished this quiz.</h2>
+      <div class="actions">
+        <button id="viewAllBtn" class="btn">View all answers</button>
+        <a class="btn" href="${returnUrl}">Back</a>
+        <a class="btn" href="index.html">Home</a>
+      </div>
+    `;
+    document.getElementById('viewAllBtn')?.addEventListener('click', () => renderAnswersView(saved));
+  }
+
+  // Results page: supports both MCQ and freeform (no scoring for freeform)
+  function renderAnswersView(obj) {
+    mount.innerHTML = '<h2>All Answers</h2>';
+    const list = document.createElement('ol');
+    const qs = data.questions;
+
     for (let i = 0; i < qs.length; i++) {
       const q = qs[i];
-      const myAns     = q.authorAnswer;
-      const myGuess   = q.authorGuessForAbby;
-      const abbyAns   = obj.answers[i];
-      const abbyGuess = obj.guesses[i];
-      const youRight  = (myGuess === abbyAns) ? '✅' : '❌';
-      const abbyRight = (abbyGuess === myAns) ? '✅' : '❌';
-      lines.push(`${i+1}. ${q.text}`);
-      lines.push(`   Abby answered: ${q.options[abbyAns] ?? '—'}   (You guessed: ${q.options[myGuess] ?? '—'} ${youRight})`);
-      lines.push(`   You answered:  ${q.options[myAns] ?? '—'}   (Abby guessed: ${q.options[abbyGuess] ?? '—'} ${abbyRight})`);
-      lines.push('');
+      const isFreeform = (q.type === 'freeform') || (!Array.isArray(q.options));
+      const li = document.createElement('li');
+
+      if (isFreeform) {
+        const abbyText = obj.answers[i] ?? '';
+        const authorTxt = (q.authorText || q.authorAnswerText || q.authorAnswer || '');
+        li.innerHTML = `
+          <p><strong>${q.text}</strong></p>
+          <p>You wrote: <em>${escapeHtml(abbyText || '(no answer)')}</em></p>
+          <p>My note: <strong>${escapeHtml(authorTxt || '(no reply yet)')}</strong></p>
+          <hr/>
+        `;
+      } else {
+        const myAns = q.authorAnswer;
+        const myGuess = q.authorGuessForAbby;
+        const abbyAns = obj.answers[i];
+        const abbyGuess = obj.guesses[i];
+        const correct = (abbyGuess === myAns);
+        const match = (abbyAns === myAns);
+        const iGuessedRight = (myGuess === abbyAns);
+        li.innerHTML = `
+          <p><strong>${q.text}</strong></p>
+          <p>You answered: <em>${q.options[abbyAns] ?? "—"}</em></p>
+          <p>You guessed I answered: <em>${q.options[abbyGuess] ?? "—"}</em> ${correct ? "✅" : "❌"}</p>
+          <p>What I actually answered: <strong>${q.options[myAns]}</strong></p>
+          <p><small>I guessed you would pick: <em>${q.options[myGuess]}</em></small></p>
+          <hr/>
+          <p><small>Match? ${match ? "💖 Yes!" : "Not this time"} · Did I guess yours right? ${iGuessedRight ? "🔮 Yes!" : "Nope 😅"}</small></p>
+        `;
+      }
+      list.appendChild(li);
     }
-    return lines.join('\n');
+    mount.appendChild(list);
+
+    const actions = document.createElement('div');
+    actions.className = 'actions';
+    actions.innerHTML = `
+      <a class="btn" href="${returnUrl}">Back</a>
+      <a class="btn" href="index.html">Home</a>
+    `;
+    mount.appendChild(actions);
   }
 
-    // Wire the send button
-  document.getElementById('sendResultsBtn')?.addEventListener('click', async () => {
-    const text = buildEmailBody();
-    if (navigator.share) {
-      try { await navigator.share({ title: data.title || 'Sunday Quiz', text }); return; } catch {}
-    }
-    const subject = encodeURIComponent((data.title || 'Sunday Quiz') + ' — Results');
-    const body = encodeURIComponent(text);
-    window.location.href = `mailto:${encodeURIComponent(EMAIL_TO)}?subject=${subject}&body=${body}`;
+  // ---------- Nav buttons ----------
+  prevBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (qIndex > 0) { qIndex -= 1; renderQuestion(qIndex); }
+    else { exitQuiz(); }
   });
 
+  nextBtn?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (qIndex < data.questions.length - 1) { qIndex += 1; renderQuestion(qIndex); }
+    else { renderDone(); }
+  });
 
-  // Back row
-  const backRow = document.createElement('div');
-  backRow.className = 'actions';
-  backRow.innerHTML = `<a class="btn" href="${returnUrl}">Back</a>`;
-  mount.appendChild(backRow);
-  
-  }
-
-  if (saved && Array.isArray(saved.answers) && Array.isArray(saved.guesses)) { mount.innerHTML = ''; const btn = document.createElement('button'); btn.className = 'btn primary'; btn.textContent = 'View all answers'; btn.addEventListener('click', () => renderAnswersView(saved)); mount.appendChild(btn); nav.style.display = 'none'; return; }
-  let step = 0; const answers = []; const guesses = [];
-  function renderQuestion(i) {
-    const q = data.questions[i]; mount.innerHTML = ''; const h = document.createElement('h2'); h.textContent = `Q${i + 1}. ${q.text}`; mount.appendChild(h);
-    const secMe = document.createElement('section'); secMe.innerHTML = '<div><strong>Your answer</strong></div>'; q.options.forEach((opt, idx) => { const label = document.createElement('label'); label.style.display = 'block'; label.innerHTML = `<input type="radio" name="me-${i}" value="${idx}"> ${opt}`; secMe.appendChild(label); }); mount.appendChild(secMe);
-    const secGuess = document.createElement('section'); secGuess.innerHTML = '<div><strong>Guess what I answered</strong></div>'; q.options.forEach((opt, idx) => { const label = document.createElement('label'); label.style.display = 'block'; label.innerHTML = `<input type="radio" name="guess-${i}" value="${idx}"> ${opt}`; secGuess.appendChild(label); }); mount.appendChild(secGuess);
-    nav.style.display = 'flex'; prevBtn.disabled = (i === 0); nextBtn.textContent = (i === data.questions.length - 1) ? 'See results →' : 'Next →';
-    if (answers[i] != null) { const r = mount.querySelector(`input[name="me-${i}"][value="${answers[i]}"]`); if (r) r.checked = true; }
-    if (guesses[i] != null) { const r = mount.querySelector(`input[name="guess-${i}"][value="${guesses[i]}"]`); if (r) r.checked = true; }
-  }
-  function capture(i) { const me = mount.querySelector(`input[name="me-${i}"]:checked`); const g = mount.querySelector(`input[name="guess-${i}"]:checked`); answers[i] = me ? parseInt(me.value, 10) : null; guesses[i] = g ? parseInt(g.value, 10) : null; }
-  prevBtn.addEventListener('click', () => { capture(step); if (step > 0) { step--; renderQuestion(step); } }); nextBtn.addEventListener('click', () => { capture(step); if (answers[step] == null || guesses[step] == null) { alert('Please answer both parts!'); return; } if (step < data.questions.length - 1) { step++; renderQuestion(step); } else { showResults(); } });
-  function showResults() { const payload = { answers, guesses, savedAt: new Date().toISOString(), version: 1 }; try { localStorage.setItem(STORAGE_KEY, JSON.stringify(payload)); } catch { } mount.innerHTML = '<h2>Results</h2><p>Nice! Your answers are saved.</p>'; const btn = document.createElement('button'); btn.className = 'btn primary'; btn.textContent = 'View all answers'; btn.addEventListener('click', () => renderAnswersView(payload)); mount.appendChild(btn); nav.style.display = 'none'; const actions = document.createElement('div'); actions.className = 'actions'; actions.innerHTML = `<a class="btn" href="history.html">Back</a> <a class="btn" href="index.html">Home</a>`; mount.appendChild(actions); }
-  renderQuestion(step);
+  // ---------- First render ----------
+  renderQuestion(qIndex);
 })();

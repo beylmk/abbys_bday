@@ -1,0 +1,23 @@
+{
+  "title": "Sunday Freeform — Little Letters",
+  "questions": [
+    {
+      "id": "memory",
+      "type": "freeform",
+      "text": "What's a favorite memory of ours from this year? Write a few sentences.",
+      "authorText": "Mine is our rainy walk where we shared an umbrella and got hot chocolate after."
+    },
+    {
+      "id": "kindness",
+      "type": "freeform",
+      "text": "Tell me something kind you did for yourself this week.",
+      "authorText": "I actually took a real lunch break on Tuesday and read a chapter of my book."
+    },
+    {
+      "id": "lookforward",
+      "type": "freeform",
+      "text": "What are you looking forward to next weekend?",
+      "authorText": "A slow morning with croissants and a long phone call with you."
+    }
+  ]
+}
