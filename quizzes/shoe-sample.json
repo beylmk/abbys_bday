@@ -1,0 +1,84 @@
+{
+  "title": "Shoe Game Bestie Edition",
+  "questions": [
+    {
+      "id": "toast",
+      "type": "either",                 
+      "text": "Who is more likely to burn toast?",
+      "choices": ["Abby", "Maddie"],   
+      "authorPick": 1                 
+    },
+    {
+      "id": "planner",
+      "type": "either",
+      "text": "Who is the better planner?",
+      "authorPick": 0
+    },
+    {
+      "id": "staysup",
+      "type": "either",
+      "text": "Who stays up later?",
+      "authorPick": 1
+    },
+    {
+      "id": "ponzi",
+      "type": "either",
+      "text": "Who is more likely to accidentally join a ponzi scheme?",
+      "authorPick": 0
+    },
+    {
+      "id": "addictive",
+      "type": "either",
+      "text": "Who has a more addictive personality?",
+      "authorPick": 0
+    },
+    {
+      "id": "phone",
+      "type": "either",
+      "text": "Who is on their phone more?",
+      "authorPick": 0
+    },
+    {
+      "id": "ready",
+      "type": "either",
+      "text": "Who takes longer to get ready??",
+      "authorPick": 1
+    },
+    {
+      "id": "toilet",
+      "type": "either",
+      "text": "Who is more likely to drop their phone in a toilet?",
+      "authorPick": 0
+    },
+    {
+      "id": "cult",
+      "type": "either",
+      "text": "Who is more likely to accidentally join a cult?",
+      "authorPick": 1
+    },
+    {
+      "id": "fight",
+      "type": "either",
+      "text": "Who would win in a fight?",
+      "authorPick": 0
+    },
+    {
+      "id": "romantic",
+      "type": "either",
+      "text": "Who is more romantic?",
+      "authorPick": 1
+    },
+    {
+      "id": "teacher",
+      "type": "either",
+      "text": "Who was more of a teachers' pet?",
+      "authorPick": 1
+    },
+    {
+      "id": "ceo",
+      "type": "either",
+      "text": "If we started a company together, who would be the CEO?",
+      "authorPick": 0
+    }
+  ]
+}
